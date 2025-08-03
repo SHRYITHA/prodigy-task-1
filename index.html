@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Navigation</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom right, #eef9ff, #d0f0ff);
+      padding-top: 70px;
+      scroll-behavior: smooth;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      z-index: 1000;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      animation: slideDown 0.7s ease-out;
+    }
+    nav.scrolled {
+      background: linear-gradient(90deg, #43cea2, #185a9d);
+    }
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    .nav-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 20px;
+      position: relative;
+    }
+    .menu {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      list-style: none;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    .menu li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      font-size: 16px;
+      border-radius: 20px;
+      color: white;
+      transition: 0.3s ease;
+    }
+    .menu li:hover,
+    .menu li.active {
+      background: #00f7ff;
+      color: #0f2027;
+      transform: scale(1.05);
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 247, 255, 0.4);
+    }
+    .hamburger {
+      display: none;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      position: absolute;
+      right: 20px;
+    }
+    @media (max-width: 768px) {
+      .menu {
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: -10px;
+        width: 110%;
+        background: linear-gradient(180deg, #0f2027, #203a43, #2c5364);
+        display: none;
+        padding: 10px 0;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        z-index: 1000;
+      }
+      .menu.show {
+  display: flex;
+  height: auto; /* Let it expand */
+  min-height: 200px; /* ✅ Add this line to force background to grow */
+}
+      .menu li {
+        justify-content: center;
+        padding: 15px;
+      }
+      .hamburger {
+        display: block;
+      }
+      .nav-container {
+        justify-content: space-between;
+      }
+      .bottom-toggle {
+        display: block;
+      }
+    }
+    section {
+      min-height: 100vh;
+      padding: 80px 30px;
+    }
+    section:nth-child(even) {
+      background: #e0f7ff;
+    }
+    section:nth-child(odd) {
+      background: #fff7e6;
+    }
+    h2 {
+      color: #0f2027;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 16px;
+      color: #333;
+    }
+    #backToTop {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #00f7ff;
+      color: #0f2027;
+      border: none;
+      padding: 10px 15px;
+      font-size: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 247, 255, 0.3);
+      transition: 0.3s;
+    }
+    #backToTop:hover {
+      background: #0ff;
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #0ff;
+    }
+    .bottom-toggle {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #00f7ff;
+      color: #0f2027;
+      border: none;
+      padding: 12px 15px;
+      border-radius: 50%;
+      font-size: 20px;
+      box-shadow: 0 4px 10px rgba(0, 247, 255, 0.4);
+      z-index: 1001;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .bottom-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #00f7ff;
+    }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="nav-container">
+      <ul class="menu" id="menu">
+        <li onclick="scrollToSection('home', event)"><i class="fas fa-house"></i> Home</li>
+        <li onclick="scrollToSection('about', event)"><i class="fas fa-user"></i> About</li>
+        <li onclick="scrollToSection('services', event)"><i class="fas fa-tools"></i> Services</li>
+        <li onclick="scrollToSection('contact', event)"><i class="fas fa-envelope"></i> Contact</li>
+      </ul>
+      <i class="fas fa-bars hamburger" onclick="toggleMenu()"></i>
+    </div>
+  </nav>
+  <section id="home">
+    <h2>🏠 Welcome to Our Website</h2>
+    <p>We help you build modern, responsive, and interactive web solutions that make your brand stand out.</p>
+    <p style="margin-top: 20px; font-weight: bold;">Scroll down to explore what we do 👇</p>
+  </section>
+  <section id="about">
+    <h2>💡 About Us</h2>
+    <p>We’re a passionate team of developers and designers focused on delivering clean code and delightful user experiences.</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 30px;">
+      <div style="flex: 1; min-width: 250px;">
+        <h3>🌟 Our Mission</h3>
+        <p>To empower businesses with smart and scalable digital solutions.</p>
+      </div>
+      <div style="flex: 1; min-width: 250px;">
+        <h3>🚀 Our Values</h3>
+        <p>Innovation, reliability, and customer satisfaction are at the heart of everything we do.</p>
+      </div>
+      <div style="flex: 1; min-width: 250px;">
+        <h3>👨‍💻 Our Team</h3>
+        <p>We are a team of curious minds, always ready to learn and adapt to new challenges.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <h2>🛠 Our Services</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 30px;">
+      <div style="flex: 1; min-width: 250px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <h3><i class="fas fa-laptop-code"></i> Web Development</h3>
+        <p>Custom websites and portals that are fast, responsive, and user-friendly.</p>
+      </div>
+      <div style="flex: 1; min-width: 250px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <h3><i class="fas fa-mobile-alt"></i> Mobile Apps</h3>
+        <p>Cross-platform mobile applications tailored to your business needs.</p>
+      </div>
+      <div style="flex: 1; min-width: 250px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <h3><i class="fas fa-cloud"></i> Cloud Integration</h3>
+        <p>Scalable and secure cloud-based services to help you grow efficiently.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>📞 Get in Touch</h2>
+    <p>We’d love to hear from you. Fill out the form below and we’ll get back to you shortly.</p>
+    <form style="margin-top: 30px; max-width: 500px;">
+      <input type="text" placeholder="Your Name" required style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;" />
+      <input type="email" placeholder="Your Email" required style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;" />
+      <textarea placeholder="Your Message" rows="5" required style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;"></textarea>
+      <button type="submit" style="background-color: #00f7ff; color: #0f2027; padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+        Send Message
+      </button>
+    </form>
+  </section>
+
+  <button id="backToTop" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
+
+  <!-- ✅ Bottom Hamburger Toggle -->
+  <button id="bottomToggle" onclick="toggleMenu()" class="bottom-toggle">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('menu').classList.toggle('show');
+    }
+
+    function scrollToSection(id, event) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('menu').classList.remove('show');
+      const menuItems = document.querySelectorAll('.menu li');
+      menuItems.forEach(item => item.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      const backToTopBtn = document.getElementById('backToTop');
+      navbar.classList.toggle('scrolled', window.scrollY > 10);
+      backToTopBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+      highlightCurrentSection();
+    });
+
+    function highlightCurrentSection() {
+      const sections = document.querySelectorAll('section');
+      const menuItems = document.querySelectorAll('.menu li');
+      let index = sections.length;
+      while (--index && window.scrollY + 100 < sections[index].offsetTop) {}
+      menuItems.forEach(li => li.classList.remove('active'));
+      menuItems[index].classList.add('active');
+    }
+    highlightCurrentSection();
+  </script>
+  
+</body>
+</html>
